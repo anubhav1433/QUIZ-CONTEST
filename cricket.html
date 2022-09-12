@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>cricket</title>
+    <style>
+        body {
+            background-image: url('cricket.jpg');
+            background-size: 2000px;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bolder;
+            font-size: 50px;
+        }
+
+        h5,
+        p {
+            font-weight: bold;
+            font-family: cursive;
+        }
+
+        #quiz {
+            font-size: x-large;
+            background-color: lightblue;
+            text-align: center;
+            border: dotted;
+            border-radius: 4px;
+            padding: auto;
+        }
+
+        #submit {
+            background-color: green;
+            color: white;
+            padding: 12px 20px;
+            border: black;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #results {
+            text-align: center;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 100px;
+            border-style: dashed;
+            background-color: lightseagreen;
+        }
+
+        #exit {
+            background-color: red;
+            font-size: larger;
+            font-weight: bold;
+            font-family: cursive;
+            position: relative;
+            cursor: pointer;
+            border: black;
+            border-radius: 4px;
+            padding: auto;
+            color: aliceblue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>WELCOME TO CRICKET QUIZ</h1>
+    <h5>NOTE:</h5>
+    <p>*The Following game consist of +4 for each correct answer and -1 for each wrong answers.</p>
+    <p>Here's the opportunity to judge yourself and use all your sports knowledge.</p>
+    <div id="quiz"></div>
+    <button id="submit">Submit Quiz</button>
+    <div id="results"></div>
+    <form action="quiz_index.html" target="_parent">
+        <input type="submit" id="exit" value="BACK TO HOME" />
+    </form>
+</body>
+<script src="jquery-3.6.1.min.js"></script>
+<script>
+    (function () {
+        function startquiz() {
+            const output = [];
+            ques.forEach((currentques, qno) => {                     //for taking each ques of an array and implementing each at a time
+                const ans = [];
+                for (letter in currentques.answers) {                   //letter -> index no.
+                    ans.push(                                                 //making radio button and adding options in an array
+                        `<label>
+                    <input type="radio" name="question${qno}" value="${letter}">       
+                    ${letter} :
+                    ${currentques.answers[letter]}
+                    </label>`
+                    );
+                }
+                output.push(                                            //adding ques and options in one array
+                    `<div class="question"> ${currentques.question} </div>
+                <div class="answers"> ${ans.join('')} </div>`
+                );
+            })
+            quiz1.innerHTML = output.join('');                          //displaying question as one string and options as another 
+            $('#quiz').hide(2000, function () { console.log("hide"); });        //for something new
+            $('#quiz').show(2000, function () { console.log("shown"); })      //do more animated stuffs
+        }
+
+        function showresults() {
+            const answer = quiz1.querySelectorAll('.answers');                  //storing all the options
+            let score = 0;                                                      //calculating scores
+            ques.forEach((currentques, qno) => {
+                const answerContainer = answer[qno];                            //options of each question at a time
+                const selector = `input[name=question${qno}]:checked`;          //locating selected options
+                const userAnswer = (answerContainer.querySelector(selector) || {}).value;       //storing user's answer
+                if (userAnswer == currentques.correctAnswer) {                              //comparing user's ans
+                    score += 4;
+                    answer[qno].style.color = 'darkgreen';
+                }
+                else {
+                    score -= 1;
+                    answer[qno].style.color = 'red';
+                }
+            });
+            results.innerHTML = "YOUR FINAL SCORE IS: " + `${score}`;
+            function changeColor() {
+                var x = document.querySelectorAll("#results");
+
+                for (var i = 0; i < x.length; i++) {
+                    x[i].style.color = x[i].style.color === 'red' ? 'yellow' : 'red';          //to toggle result text color
+                }
+            }
+            window.setInterval(changeColor, 500);
+            $('#quiz').hide(2000, function () { console.log("hide"); });                        //to display result in the middle scree
+            setTimeout(() => { $('#quiz').show(2000, function () { console.log("shown"); }); }, 3000);       //to display the ques after 3s
+        }
+
+        const quiz1 = document.getElementById('quiz');
+        const result = document.getElementById("results");
+        const sub = document.getElementById("submit");
+        const ques = [{
+            question: "1. When was the Ashes first played?",
+            answers: {
+                a: "1872",
+                b: "1877",
+                c: "1882",
+                d: "1887"
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "2.  Who won the first ever Cricket World Cup in 1975?",
+            answers: {
+                a: "AUSTRALIA",
+                b: "ENGLAND",
+                c: "INDIA",
+                d: "WEST INDIES"
+            },
+            correctAnswer: "d"
+        },
+        {
+            question: "3.  What is the largest cricket stadium in the world?",
+            answers: {
+                a: "Eden Gardens",
+                b: "Melbourne Cricket Club",
+                c: "Lords",
+                d: "Narendra Modi Stadium"
+            },
+            correctAnswer: "d"
+        },
+        {
+            question: "4. How long is the cricket pitch?",
+            answers: {
+                a: "18 yards",
+                b: "20 yards",
+                c: "22 yards",
+                d: "24 yards"
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "5. Which fast bowler has taken the most test wickets?",
+            answers: {
+                a: "Muttiah Muralitharan",
+                b: "James Anderson",
+                c: "Dale Steyn",
+                d: "Glenn McGrath"
+            },
+            correctAnswer: "b"
+        },
+        {
+            question: "6. Which player has scored the most ducks in international cricket?",
+            answers: {
+                a: "Muttiah Muralitharan",
+                b: "James Anderson",
+                c: "Bret Lee",
+                d: "Dale Steyn"
+            },
+            correctAnswer: "a"
+        },
+        {
+            question: "7. Who is the first batsman to cross 10,000 runs in tests?",
+            answers: {
+                a: "Sachin Tendulkar",
+                b: "Sunil Gavaskar",
+                c: "Allan Border",
+                d: "Brian Lara"
+            },
+            correctAnswer: "b"
+        },
+        {
+            question: "8. What is the nickname of Sachin Tendulkar?",
+            answers: {
+                a: "The Little Genius",
+                b: "The God of Cricket",
+                c: "The Little Master",
+                d: "Master Blaster"
+            },
+            correctAnswer: "d"
+        },
+        {
+            question: "9. Which Australian player has scored the most test runs?",
+            answers: {
+                a: "Steve Waugh",
+                b: "Don Bradman",
+                c: "Ricky Ponting",
+                d: "Matthew Hayden"
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "10.  The first official international match of cricket was held in 1844 between...",
+            answers: {
+                a: "England & Australia",
+                b: "India & Pakistan",
+                c: "USA & Canada",
+                d: "England & India"
+            },
+            correctAnswer: "c"
+        },
+        ]
+        startquiz();
+
+        sub.addEventListener('click', showresults);
+    })();
+</script>
+
+</html>
