@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>basketball</title>
+    <style>
+        body {
+            background-image: url('bb.webp');
+            background-size: 1500px;
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bolder;
+            font-size: 50px;
+            color: aliceblue;
+        }
+
+        h5,
+        p {
+            font-weight: bold;
+            font-family: cursive;
+            color: aliceblue;
+            text-align: center;
+        }
+
+        #quiz {
+            font-size: x-large;
+            background-color: lightblue;
+            text-align: center;
+            border: dotted;
+            border-radius: 4px;
+            padding: auto;
+        }
+
+        #submit {
+            background-color: green;
+            color: white;
+            padding: 12px 20px;
+            border: black;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #results {
+            text-align: center;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 100px;
+            border-style: dashed;
+            background-color: lightseagreen;
+        }
+
+        #exit {
+            background-color: red;
+            font-size: larger;
+            font-weight: bold;
+            font-family: cursive;
+            position: relative;
+            cursor: pointer;
+            border: black;
+            border-radius: 4px;
+            padding: auto;
+            color: aliceblue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>WELCOME TO BASKETBALL QUIZ</h1>
+    <h5>NOTE:</h5>
+    <p>*The Following game consist of +4 for each correct answer and -1 for each wrong answers.</p>
+    <p>Here's the opportunity to judge yourself and use all your sports knowledge.</p>
+    <div id="quiz"></div>
+    <button id="submit">Submit Quiz</button>
+    <div id="results"></div>
+    <form action="quiz_index.html" target="_parent">
+        <input type="submit" id="exit" value="BACK TO HOME" />
+    </form>
+</body>
+<script src="jquery-3.6.1.min.js"></script>
+<script>
+    (function () {
+        function startquiz() {
+            const output = [];
+            ques.forEach((currentques, qno) => {                     //for taking each ques of an array and implementing each at a time
+                const ans = [];
+                for (letter in currentques.answers) {                   //letter -> index no.
+                    ans.push(                                                 //making radio button and adding options in an array
+                        `<label>
+                    <input type="radio" name="question${qno}" value="${letter}">       
+                    ${letter} :
+                    ${currentques.answers[letter]}
+                    </label>`
+                    );
+                }
+                output.push(                                            //adding ques and options in one array
+                    `<div class="question"> ${currentques.question} </div>
+                <div class="answers"> ${ans.join('')} </div>`
+                );
+            })
+            quiz1.innerHTML = output.join('');                          //displaying question as one string and options as another 
+            $('#quiz').hide(2000, function () { console.log("hide"); });        //for something new
+            $('#quiz').show(2000, function () { console.log("shown"); })      //do more animated stuffs
+        }
+
+        function showresults() {
+            const answer = quiz1.querySelectorAll('.answers');                  //storing all the options
+            let score = 0;                                                      //calculating scores
+            ques.forEach((currentques, qno) => {
+                const answerContainer = answer[qno];                            //options of each question at a time
+                const selector = `input[name=question${qno}]:checked`;          //locating selected options
+                const userAnswer = (answerContainer.querySelector(selector) || {}).value;       //storing user's answer
+                if (userAnswer == currentques.correctAnswer) {                              //comparing user's ans
+                    score += 4;
+                    answer[qno].style.color = 'darkgreen';
+                }
+                else {
+                    score -= 1;
+                    answer[qno].style.color = 'red';
+                }
+            });
+            results.innerHTML = "YOUR FINAL SCORE IS: " + `${score}`;
+            function changeColor() {
+                var x = document.querySelectorAll("#results");
+
+                for (var i = 0; i < x.length; i++) {
+                    x[i].style.color = x[i].style.color === 'red' ? 'yellow' : 'red';          //to toggle result text color
+                }
+            }
+            window.setInterval(changeColor, 500);
+            $('#quiz').hide(2000, function () { console.log("hide"); });                        //to display result in the middle scree
+            setTimeout(() => { $('#quiz').show(2000, function () { console.log("shown"); }); }, 3000);       //to display the ques after 3s
+        }
+
+        const quiz1 = document.getElementById('quiz');
+        const result = document.getElementById("results");
+        const sub = document.getElementById("submit");
+        const ques = [{
+            question: "1. A rebound is…",
+            answers: {
+                a: "a type of move",
+                b: "a technique",
+                c: "a statistic",
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "2. What is the highest governing body of basketball?",
+            answers: {
+                a: "EuroLeague",
+                b: "NBA",
+                c: "FIBA",
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "3. When was basketball made?",
+            answers: {
+                a: "1737",
+                b: "1974",
+                c: "1891",
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "4. Who made basketball?",
+            answers: {
+                a: "James Naismith",
+                b: "William Morgan",
+                c: "Jim Thorpe",
+            },
+            correctAnswer: "a"
+        },
+        {
+            question: "5. The main responsibility of the “center” player is to…",
+            answers: {
+                a: "make baskets",
+                b: "steal the ball and block attacks",
+                c: "secure rebounds and defend the paint",
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "6. A free throw is worth…",
+            answers: {
+                a: "1 point",
+                b: "2 points",
+                c: "3 points",
+            },
+            correctAnswer: "a"
+        },
+        {
+            question: "7. When would a player be awarded a free throw?",
+            answers: {
+                a: "When they make a shot from the half-court.",
+                b: "When they are fouled while shooting.",
+                c: "When they perform an assist.",
+            },
+            correctAnswer: "b"
+        },
+        {
+            question: "8.Kicking a basketball is what kind of foul?",
+            answers: {
+                a: "Personal foul",
+                b: "Flagrant foul",
+                c: "Technical foul",
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "9. After a player commits an FFP2…",
+            answers: {
+                a: "their team is disqualified.",
+                b: "their team is disqualified.",
+                c: "they are ejected from the game.",
+            },
+            correctAnswer: "c"
+        },
+        {
+            question: "10.Which team won the first NBA Championship?",
+            answers: {
+                a: "Cavaliers",
+                b: "Lakers",
+                c: "Rockets",
+            },
+            correctAnswer: "b"
+        },
+        ]
+        startquiz();
+
+        sub.addEventListener('click', showresults);
+    })();
+</script>
+
+</html>
